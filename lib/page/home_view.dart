@@ -2,19 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/event/counter_event.dart';
+
 import '../bloc/logic/counter_bloc.dart';
+import '../bloc/logic/theme_bloc.dart';
+
 import '../bloc/state/counter_state.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
   @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
   Widget build(BuildContext context) {
+    ThemeCubit theme = BlocProvider.of<ThemeCubit>(context, listen: false);
+
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text("Bloc Demo APP"),
-      ),
+      appBar:
+          AppBar(centerTitle: true, title: const Text("Bloc Demo"), actions: [
+        IconButton(
+          onPressed: () {
+            theme.changeTheme();
+            setState(() {});
+          },
+
+          icon: theme.isDark
+              ? Icon(Icons.nightlight_round)
+              : Icon(Icons.sunny), // Icône de lune
+        ),
+      ]),
       body: BlocBuilder<CounterBloc, CounterStates>(
         builder: (context, state) {
           if (state is InitialState) {
